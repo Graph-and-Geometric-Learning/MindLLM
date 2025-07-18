@@ -1,0 +1,7 @@
+_target_: src.modules.NeuroscienceInformedAttention
+n_fmri_tokens: 128
+rank: 128
+pe_method: gauss
+token_dim: 1024
+hidden_dim: 1024
+n_mlp_layers: 4

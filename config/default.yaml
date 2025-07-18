@@ -1,0 +1,54 @@
+stage: fit
+
+seed: 42
+model_id: lmsys/vicuna-7b-v1.5
+checkpoint: null
+resume_id: null
+group: null
+run_name: null
+
+lora: false
+lr: 0.001
+early_stop: false
+output_dir: outputs/
+
+defaults:
+  - encoder: neuro_informed_attn
+
+trainer:
+  _target_: lightning.pytorch.Trainer
+  max_epochs: 2000
+  check_val_every_n_epoch: 1
+  accumulate_grad_batches: 8
+  gradient_clip_val: 0.5
+  use_distributed_sampler: false
+  logger:
+    _target_: lightning.pytorch.loggers.WandbLogger
+    name: ${run_name}
+    project: mindllm
+    save_dir: ${output_dir}
+    id: ${resume_id}
+    group: null
+  callbacks:
+    - _target_: lightning.pytorch.callbacks.ModelCheckpoint
+      monitor: val/token_loss
+      filename: "{epoch:02d}"
+    - _target_: lightning.pytorch.callbacks.LearningRateMonitor
+      logging_interval: step
+    - _target_: src.utils.callbacks.WatchModel
+
+data:
+  _target_: src.dataset.fMRIInstructionDataModule
+  task: null
+  exclude: null
+  whole_brain: false
+  num_workers: 4
+  batch_size: 8
+  mixup: false
+  subjects:
+    - 1
+  train_samples: -1
+  nsd_version: 0
+  group_by_coco: true
+  split_val: false
+  split_seed: ${seed}
