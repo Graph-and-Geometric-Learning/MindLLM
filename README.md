@@ -2,6 +2,7 @@
 
 This is the official implementation of ICML 2025 paper [MindLLM: A Subject-Agnostic and Versatile Model for fMRI-to-Text Decoding](https://arxiv.org/abs/2502.15786).
 
+![main figure](./assets/teaser.jpg)
 
 ## Installation
 ```
